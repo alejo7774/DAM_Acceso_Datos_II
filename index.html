@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Test completo (30) — Java IO/NIO · XML · JDBC · Hibernate</title>
+  <title>Test Java - Completo y Fácil</title>
   <style>
     :root{
       --bg:#0b1020; --card:#121a33; --muted:#9fb0ff; --text:#eef2ff;
@@ -16,567 +16,445 @@
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background: radial-gradient(1000px 600px at 10% 0%, #1b2a6a 0%, var(--bg) 55%);
       color:var(--text);
-      line-height:1.35;
+      line-height:1.4;
     }
     header{padding:26px 16px 10px; text-align:center;}
-    header h1{margin:0 0 6px; font-size:20px; font-weight:850;}
-    header p{margin:0; color:rgba(238,242,255,.8); font-size:13px;}
-    .container{max-width:980px; margin:0 auto; padding:16px;}
+    header h1{margin:0 0 6px; font-size:20px; font-weight:850; color: #fff;}
+    .container{max-width:800px; margin:0 auto; padding:16px;}
+    
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
       border:1px solid var(--border);
       border-radius:14px;
-      padding:16px;
-      margin:14px 0;
-      box-shadow: 0 10px 25px rgba(0,0,0,.25);
+      padding:20px;
+      margin:16px 0;
+      box-shadow: 0 10px 25px rgba(0,0,0,.3);
     }
-    .qhead{display:flex; gap:10px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap;}
+    
     .badge{
-      font-size:12px; padding:6px 10px; border-radius:999px;
-      background: rgba(159,176,255,.18);
+      font-size:11px; padding:4px 8px; border-radius:6px;
+      background: rgba(159,176,255,.1);
       color: var(--muted);
-      border:1px solid rgba(159,176,255,.25);
-      white-space:nowrap;
+      border:1px solid rgba(159,176,255,.2);
+      text-transform: uppercase; letter-spacing: 0.5px;
+      display: inline-block; margin-bottom: 8px;
     }
-    .qtitle{margin:6px 0 10px; font-size:16px; font-weight:780;}
-    .prompt{color:rgba(238,242,255,.86); margin:0 0 10px; font-size:13px;}
+    .qtitle{margin:0 0 12px; font-size:17px; font-weight:700; color: #fff;}
+    
+    /* Estilos Code Block */
     pre{
-      margin:10px 0 12px; padding:12px; border-radius:12px; overflow:auto;
-      background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.08);
+      margin:10px 0 15px; padding:15px; border-radius:10px; overflow-x:auto;
+      background: #080c18; border:1px solid rgba(255,255,255,.1);
+      color: #d1d5db;
     }
-    code{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12.5px;}
-    .options{display:grid; gap:8px; margin-top:10px;}
-    .opt{
-      display:flex; gap:10px; align-items:flex-start;
-      padding:10px 12px; border-radius:12px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.14);
+    code{font-family: 'Consolas', 'Monaco', monospace; font-size:13px;}
+    
+    /* Código solución (verde/resaltado) */
+    .solution-code {
+        border-left: 3px solid var(--ok);
+        background: rgba(46,229,157,0.05);
     }
-    .opt input{margin-top:3px}
-    label{display:block; font-size:12px; color:rgba(238,242,255,.8); margin:6px 0 6px;}
-    textarea, input[type="text"]{
+    
+    /* Estilos Inputs y Textareas */
+    input[type="text"], textarea{
       width:100%;
       padding:12px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.22);
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,.15);
+      background: rgba(0,0,0,.3);
       color:var(--text);
+      font-family: inherit;
+      font-size:14px;
+      margin-bottom: 10px;
+      display: block;
+    }
+    input[type="text"]:focus, textarea:focus{
+      border-color: var(--muted);
       outline:none;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size:13px;
-      resize:vertical;
-      min-height:54px;
+      box-shadow: 0 0 0 2px rgba(159,176,255,.2);
     }
-    textarea:focus, input[type="text"]:focus{
-      border-color: rgba(159,176,255,.45);
-      box-shadow: 0 0 0 4px rgba(159,176,255,.12);
+    
+    /* Estilos Radio Buttons (MCQ) */
+    .options{display:flex; flex-direction:column; gap:8px;}
+    .opt{
+      display:flex; gap:12px; align-items:center;
+      padding:12px; border-radius:10px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+      cursor: pointer;
+      transition: background 0.2s;
     }
-    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:10px;}
+    .opt:hover{ background: rgba(255,255,255,.07); }
+    
+    /* Aumentar visibilidad del radio */
+    input[type="radio"] {
+        appearance: none;
+        width: 18px; height: 18px;
+        border: 2px solid var(--muted);
+        border-radius: 50%;
+        margin: 0;
+        display: grid;
+        place-content: center;
+        flex-shrink: 0;
+    }
+    input[type="radio"]::before {
+        content: "";
+        width: 10px; height: 10px;
+        border-radius: 50%;
+        transform: scale(0);
+        transition: 120ms transform ease-in-out;
+        box-shadow: inset 1em 1em var(--ok);
+    }
+    input[type="radio"]:checked::before { transform: scale(1); }
+    input[type="radio"]:checked { border-color: var(--ok); }
+
+    /* Botones */
+    .btn-row{margin-top:15px; display:flex; gap:10px;}
     button{
-      cursor:pointer;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.08);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:12px;
-      font-weight:750;
-      font-size:13px;
+      cursor:pointer; border:none; padding:10px 16px; border-radius:8px;
+      font-weight:600; font-size:13px; transition: all 0.2s;
     }
-    button:hover{ background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.22); }
-    button:active{ transform: translateY(1px); }
-    .btn-primary{ background: rgba(46,229,157,.14); border-color: rgba(46,229,157,.35); }
-    .btn-primary:hover{ background: rgba(46,229,157,.18); }
-    .btn-warn{ background: rgba(255,211,106,.14); border-color: rgba(255,211,106,.35); }
-    .btn-warn:hover{ background: rgba(255,211,106,.18); }
+    .btn-validate{ background: var(--muted); color: #0b1020; }
+    .btn-validate:hover{ background: #b0c0ff; }
+    
+    /* Status y Memo */
     .status{
-      margin-top:10px; padding:10px 12px; border-radius:12px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.18);
-      font-size:13px;
+      margin-top:15px; padding:12px; border-radius:8px;
+      font-size:13px; display: none;
     }
-    .status.ok{ border-color: rgba(46,229,157,.35); background: rgba(46,229,157,.10); }
-    .status.bad{ border-color: rgba(255,92,122,.35); background: rgba(255,92,122,.10); }
-    .status .small{display:block; margin-top:6px; font-size:12px; color: rgba(238,242,255,.82);}
-    .memo{
-      margin-top:12px; padding:10px 12px; border-radius:12px;
-      border:1px dashed rgba(159,176,255,.35);
-      background: rgba(159,176,255,.08);
-      color: rgba(238,242,255,.9);
-      font-size:13px;
+    .status.show{ display: block; animation: fadeIn 0.3s ease; }
+    .status.ok{ background: rgba(46,229,157,.15); color: #8affc1; border: 1px solid rgba(46,229,157,.3); }
+    .status.bad{ background: rgba(255,92,122,.15); color: #ffadbe; border: 1px solid rgba(255,92,122,.3); }
+
+    .memo-box{
+      margin-top:12px; padding:12px; border-left: 3px solid var(--warn);
+      background: rgba(255,211,106,.05);
+      color: rgba(238,242,255,.9); font-size:13px;
     }
-    .memo b{ color: var(--muted); }
-    .footer-actions{
-      display:flex; gap:10px; flex-wrap:wrap;
-      justify-content:space-between; align-items:center;
-      margin:18px 0 26px;
-      padding:14px; border-radius:14px;
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.18);
+    .memo-box strong { color: var(--warn); display:block; margin-bottom:4px; font-size: 14px; }
+    
+    .arg-label { font-size: 12px; color: var(--muted); margin-bottom: 5px; display: block; margin-top: 10px;}
+    .hidden { display: none; }
+    
+    /* Score footer */
+    .footer {
+        position: sticky; bottom: 10px; 
+        background: #192138; border: 1px solid var(--border);
+        padding: 15px; border-radius: 12px; 
+        display: flex; justify-content: space-between; align-items: center;
+        box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+        z-index: 10;
     }
-    .scorebox{font-size:13px; color:rgba(238,242,255,.86);}
-    .pill{
-      display:inline-block; padding:5px 10px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.07);
-      margin-left:8px; font-size:12px; color: rgba(238,242,255,.9);
-    }
-    .hidden{display:none;}
-    .hint{font-size:12px; color: rgba(238,242,255,.72); margin-top:8px;}
+    @keyframes fadeIn { from{opacity:0; transform:translateY(-5px);} to{opacity:1; transform:translateY(0);} }
   </style>
 </head>
 
 <body>
 <header>
-  <h1>Test completo (30) — Java IO/NIO · XML · JDBC · Hibernate</h1>
-  <p>Valida cada pregunta. Al final pulsa <b>Finalizar</b> para ver tu nota. (Aprobado ≥ 60%)</p>
+  <h1>Test: Java IO, JDBC & Hibernate</h1>
+  <p style="opacity:0.7; font-size:13px;">Responde mentalmente y verifica tu respuesta.</p>
 </header>
 
 <div class="container" id="app"></div>
 
 <div class="container">
-  <div class="footer-actions">
-    <div class="scorebox">
-      Progreso:
-      <span class="pill" id="progressPill">0 validadas</span>
-      <span class="pill" id="scorePill">0 correctas</span>
+  <div class="footer">
+    <div style="font-size:13px; color:rgba(255,255,255,0.7)">
+      <span id="scoreText">0 / 30 Aciertos</span>
     </div>
-    <div class="row">
-      <button class="btn-warn" onclick="finalizeTest()">Finalizar</button>
-      <button onclick="resetTest()">Reiniciar</button>
+    <div style="display:flex; gap:10px;">
+        <button onclick="checkAll()" style="background:#2d3752; color:#fff; border:1px solid #444;">Revisar Todo</button>
+        <button onclick="resetTest()" style="background:#2d3752; color:#fff; border:1px solid #444;">Reiniciar</button>
     </div>
   </div>
-
-  <div id="finalStatus" class="card hidden"></div>
 </div>
 
 <script>
-  // ====== BANCO DE PREGUNTAS (30) ======
-  // type: "mcq" (test) o "code" (texto/código)
+  // TEXTOS DE MEMORIZACIÓN FÁCILES Y CORTOS
   const QUESTIONS = [
-    { id:"q1", type:"mcq",
-      title:"¿Cuál de las siguientes interfaces de Java NIO es más adecuada para representar rutas de archivos de forma independiente del sistema operativo?",
-      options:["File","Path","Files","Reader"],
-      answerIndex:1
-    },
-    { id:"q2", type:"mcq",
-      title:"¿Cuál es la principal ventaja de Java NIO frente a Java IO tradicional?",
-      options:["Es más simple de usar","Solo permite acceso secuencial","Mejor rendimiento y escalabilidad","Está limitado a ficheros XML"],
-      answerIndex:2
-    },
-    { id:"q3", type:"mcq",
-      title:"¿Qué tipo de flujo se utiliza para leer datos binarios en Java?",
-      options:["Reader","Writer","InputStream","Scanner"],
-      answerIndex:2
-    },
-    { id:"q4", type:"mcq",
-      title:"¿Cuál de los siguientes formatos permite estructurar datos jerárquicos mediante etiquetas?",
-      options:["CSV","JSON","XML","TXT"],
-      answerIndex:2
-    },
-    { id:"q5", type:"mcq",
-      title:"¿Qué parser XML es más adecuado para procesar ficheros XML de gran tamaño?",
-      options:["DOM","SAX","StAX","JDOM"],
-      answerIndex:1
-    },
-    { id:"q6", type:"mcq",
-      title:"¿Cómo se denomina el proceso de convertir documentos XML en objetos Java automáticamente?",
-      options:["Parsing","Marshalling","Binding","Serialización"],
-      answerIndex:2
-    },
-    { id:"q7", type:"mcq",
-      title:"¿Qué excepción se lanza cuando se intenta acceder a un fichero que no existe?",
-      options:["IOException","FileNotFoundException","SecurityException","IllegalArgumentException"],
-      answerIndex:1
-    },
-    { id:"q8", type:"mcq",
-      title:"¿Qué método es fundamental llamar para liberar recursos al trabajar con flujos?",
-      options:["flush()","reset()","close()","finalize()"],
-      answerIndex:2
-    },
-
-    // Código 9
-    { id:"q9", type:"code",
-      title:"Completa el código: ¿Qué clase debes usar para escribir texto de forma sencilla? (Escribe solo el nombre de la clase o el fragmento completo)",
+    // --- MCQ ---
+    { id:"q1", type:"mcq", title:"¿Qué interfaz de NIO representa rutas independientes del SO?", options:["File","Path","Files","Reader"], ans:1 },
+    { id:"q2", type:"mcq", title:"¿Principal ventaja de Java NIO frente a IO?", options:["Más simple","Solo secuencial","Rendimiento y escalabilidad","Solo XML"], ans:2 },
+    { id:"q3", type:"mcq", title:"¿Flujo para leer datos binarios?", options:["Reader","Writer","InputStream","Scanner"], ans:2 },
+    { id:"q4", type:"mcq", title:"¿Formato jerárquico por etiquetas?", options:["CSV","JSON","XML","TXT"], ans:2 },
+    { id:"q5", type:"mcq", title:"¿Parser XML para ficheros muy grandes?", options:["DOM","SAX","StAX","JDOM"], ans:1 },
+    { id:"q6", type:"mcq", title:"¿Convertir XML a objetos Java automáticamente?", options:["Parsing","Marshalling","Binding (JAXB)","Serialización"], ans:2 },
+    { id:"q7", type:"mcq", title:"¿Excepción si no existe el fichero?", options:["IOException","FileNotFoundException","SecurityException","Error"], ans:1 },
+    { id:"q8", type:"mcq", title:"¿Método para liberar recursos?", options:["flush()","reset()","close()","finalize()"], ans:2 },
+    
+    // --- CÓDIGO (CÓDIGO ENTERO EN LA PREGUNTA) ---
+    { id:"q9", type:"code", 
+      title:"Escribir texto plano en archivo.", 
       code:`try (_____ writer = new _____("archivo.txt")) {
     writer.write("Hola mundo");
 } catch (IOException e) {
     e.printStackTrace();
 }`,
-      must:["filewriter"],
-      show:"FileWriter",
-      memo:"Para escribir texto simple en un archivo → FileWriter."
+      fullCode:`try (FileWriter writer = new FileWriter("archivo.txt")) {
+    writer.write("Hola mundo");
+} catch (IOException e) {
+    e.printStackTrace();
+}`,
+      must:["filewriter"], show:"FileWriter",
+      memo:"Usamos FileWriter porque es la clase estándar para escribir caracteres (texto) en ficheros." 
     },
 
-    // Código 10
-    { id:"q10", type:"code",
-      title:"Completa el método que falta y por qué BufferedReader es más eficiente que FileReader solo.",
+    { id:"q10", type:"code", 
+      title:"Lectura eficiente línea a línea.", 
       code:`try (BufferedReader reader = new BufferedReader(new FileReader("datos.txt"))) {
     String linea;
     while ((linea = reader.____()) != null) {
         System.out.println(linea);
     }
 }`,
-      must:["readline"],
-      show:"readLine()",
-      memo:"Leer línea a línea con BufferedReader → readLine(). (Más rápido por buffer)."
+      fullCode:`try (BufferedReader reader = new BufferedReader(new FileReader("datos.txt"))) {
+    String linea;
+    while ((linea = reader.readLine()) != null) {
+        System.out.println(linea);
+    }
+}`,
+      must:["readline"], show:"readLine()",
+      memo:"Usamos readLine() porque lee una línea entera de texto de golpe, lo cual es muy eficiente." 
     },
 
-    { id:"q11", type:"mcq",
-      title:"¿Cuál es la interfaz principal de JDBC que representa una conexión a la base de datos?",
-      options:["Statement","ResultSet","Connection","DriverManager"],
-      answerIndex:2
-    },
-    { id:"q12", type:"mcq",
-      title:"¿Qué método se utiliza tradicionalmente para cargar un driver JDBC?",
-      options:["DriverManager.getConnection()","Class.forName()","Connection.createStatement()","Driver.load()"],
-      answerIndex:1
-    },
-    { id:"q13", type:"mcq",
-      title:"¿Qué interfaz se utiliza para ejecutar consultas SQL estáticas?",
-      options:["Connection","ResultSet","Statement","PreparedStatement"],
-      answerIndex:2
-    },
-    { id:"q14", type:"mcq",
-      title:"¿Cuál es la mejor opción para ejecutar consultas SQL con parámetros?",
-      options:["Statement","CallableStatement","PreparedStatement","BatchStatement"],
-      answerIndex:2
-    },
-    { id:"q15", type:"mcq",
-      title:"¿Qué método se utiliza para ejecutar consultas SELECT?",
-      options:["execute()","executeUpdate()","executeQuery()","executeBatch()"],
-      answerIndex:2
-    },
-    { id:"q16", type:"mcq",
-      title:"¿Qué interfaz representa el conjunto de resultados de una consulta SELECT?",
-      options:["Statement","Connection","ResultSet","PreparedStatement"],
-      answerIndex:2
-    },
-    { id:"q17", type:"mcq",
-      title:"¿Qué método se utiliza para confirmar una transacción?",
-      options:["commit()","rollback()","setAutoCommit()","savepoint()"],
-      answerIndex:0
-    },
-    { id:"q18", type:"mcq",
-      title:"¿Qué método es esencial llamar para liberar recursos de base de datos?",
-      options:["finalize()","close()","dispose()","release()"],
-      answerIndex:1
-    },
+    { id:"q11", type:"mcq", title:"¿Interfaz JDBC para la conexión?", options:["Statement","ResultSet","Connection","Driver"], ans:2 },
+    { id:"q12", type:"mcq", title:"¿Cargar Driver JDBC tradicionalmente?", options:["DriverManager","Class.forName()","new Driver()","load()"], ans:1 },
+    { id:"q13", type:"mcq", title:"¿Ejecutar SQL estático?", options:["Connection","ResultSet","Statement","Prepared"], ans:2 },
+    { id:"q14", type:"mcq", title:"¿Ejecutar SQL con parámetros (?)?", options:["Statement","Callable","PreparedStatement","Batch"], ans:2 },
+    { id:"q15", type:"mcq", title:"¿Método para SELECT?", options:["execute()","executeUpdate()","executeQuery()","batch()"], ans:2 },
+    { id:"q16", type:"mcq", title:"¿Contenedor de resultados SQL?", options:["Statement","Connection","ResultSet","RowSet"], ans:2 },
+    { id:"q17", type:"mcq", title:"¿Confirmar transacción?", options:["commit()","rollback()","save()","end()"], ans:0 },
+    { id:"q18", type:"mcq", title:"¿Obligatorio al terminar con la BDD?", options:["Log out","close()","null","GC"], ans:1 },
 
-    // Código 19
-    { id:"q19", type:"code",
-      title:"Completa: ¿Qué interfaz falta al inicio y qué método falta para confirmar la transacción?",
+    { id:"q19", type:"code", 
+      title:"Transacciones JDBC: Objeto y confirmación.", 
       code:`_____ conn = DriverManager.getConnection(url, user, pass);
 conn.setAutoCommit(false);
 
 try {
-    PreparedStatement stmt = conn.prepareStatement(
-        "INSERT INTO usuarios VALUES (?, ?)"
-    );
-    stmt.setString(1, "Juan");
-    stmt.setString(2, "juan@email.com");
+    PreparedStatement stmt = conn.prepareStatement("INSERT...");
     stmt.executeUpdate();
-    conn._____();
+    conn._____(); // Confirmar cambios
 } catch (SQLException e) {
     conn.rollback();
 }`,
-      must:["connection","commit"],
-      show:"Connection, commit()",
-      memo:"JDBC: tipo de conexión = Connection. Confirmar transacción = commit(). Si error = rollback()."
-    },
+      fullCode:`Connection conn = DriverManager.getConnection(url, user, pass);
+conn.setAutoCommit(false);
 
-    // Código 20
-    { id:"q20", type:"code",
-      title:"Completa: ¿Qué interfaz falta y por qué es crucial cerrar los recursos JDBC?",
-      code:`Connection conn = DriverManager.getConnection(url);
-PreparedStatement stmt = conn.prepareStatement(
-    "SELECT * FROM productos WHERE precio > ?"
-);
-stmt.setDouble(1, 100.0);
-_____ rs = stmt.executeQuery();
-
-while (rs.next()) {
-    System.out.println(rs.getString("nombre"));
+try {
+    PreparedStatement stmt = conn.prepareStatement("INSERT...");
+    stmt.executeUpdate();
+    conn.commit(); // Confirmar cambios
+} catch (SQLException e) {
+    conn.rollback();
 }`,
-      must:["resultset"],
-      show:"ResultSet",
-      memo:"SELECT devuelve ResultSet. Cerrar recursos evita fugas y bloqueos (close / try-with-resources)."
+      must:["connection","commit"], show:"Connection y commit()",
+      memo:"Connection gestiona la sesión con la base de datos y commit() hace permanentes los cambios." 
     },
 
-    { id:"q21", type:"mcq",
-      title:"¿Qué significa ORM en el contexto de acceso a datos?",
-      options:["Object Request Mapping","Online Resource Management","Object-Relational Mapping (Mapeo Objeto-Relacional)","Optimized Relational Model"],
-      answerIndex:2
-    },
-    { id:"q22", type:"mcq",
-      title:"¿Cuál es el archivo de configuración principal de Hibernate?",
-      options:["hibernate.properties","hibernate.cfg.xml","hibernate-config.xml","hibernate.xml"],
-      answerIndex:1
-    },
-    { id:"q23", type:"mcq",
-      title:"¿Cómo se denomina el proceso de definir la correspondencia entre clases Java y tablas de base de datos?",
-      options:["Configuration","Mapping","Binding","Persistence"],
-      answerIndex:1
-    },
-    { id:"q24", type:"mcq",
-      title:"¿Cuál es la interfaz principal para interactuar con Hibernate?",
-      options:["Session","Transaction","Configuration","SessionFactory"],
-      answerIndex:0
-    },
-    { id:"q25", type:"mcq",
-      title:"¿En qué estado se encuentra un objeto recién creado que no ha sido guardado en la base de datos?",
-      options:["Persistent","Detached","Transient","Managed"],
-      answerIndex:2
-    },
-    { id:"q26", type:"mcq",
-      title:"¿Qué método de Session se utiliza para persistir un objeto nuevo?",
-      options:["persist()","save()","update()","merge()"],
-      answerIndex:1
-    },
-    { id:"q27", type:"mcq",
-      title:"¿Cuál es el lenguaje de consultas propio de Hibernate?",
-      options:["SQL","JPQL","HQL (Hibernate Query Language)","Criteria"],
-      answerIndex:2
-    },
-    { id:"q28", type:"mcq",
-      title:"¿Qué interfaz se utiliza para manejar transacciones en Hibernate?",
-      options:["Session","Connection","Transaction","Query"],
-      answerIndex:2
+    { id:"q20", type:"code", 
+      title:"Recoger datos y limpieza.", 
+      code:`Statement stmt = conn.createStatement();
+// Ejecutar consulta
+_____ rs = stmt.executeQuery("SELECT * FROM productos");
+
+try {
+    while (rs.next()) {
+        System.out.println(rs.getString("nombre"));
+    }
+} finally {
+    rs.close(); // Limpieza obligatoria
+}`,
+      fullCode:`Statement stmt = conn.createStatement();
+// Ejecutar consulta
+ResultSet rs = stmt.executeQuery("SELECT * FROM productos");
+
+try {
+    while (rs.next()) {
+        System.out.println(rs.getString("nombre"));
+    }
+} finally {
+    rs.close(); // Limpieza obligatoria
+}`,
+      must:["resultset"], show:"ResultSet",
+      memo:"ResultSet es la tabla de resultados de la query. Cerramos con close() para liberar memoria." 
     },
 
-    // Código 29
-    { id:"q29", type:"code",
-      title:"Completa: ¿Qué anotación falta al inicio de la clase para marcarla como entidad persistente?",
+    { id:"q21", type:"mcq", title:"¿Qué es ORM?", options:["Object Request","Online Resource","Object-Relational Mapping","Other"], ans:2 },
+    { id:"q22", type:"mcq", title:"¿Configuración principal Hibernate?", options:["hibernate.properties","hibernate.cfg.xml","pom.xml","web.xml"], ans:1 },
+    { id:"q23", type:"mcq", title:"¿Vincular Clase Java <-> Tabla?", options:["Config","Mapping","Binding","Parsing"], ans:1 },
+    { id:"q24", type:"mcq", title:"¿Interfaz principal Hibernate (sesión)?", options:["Session","Transaction","Factory","Manager"], ans:0 },
+    { id:"q25", type:"mcq", title:"¿Objeto nuevo no guardado aún?", options:["Persistent","Detached","Transient","Removed"], ans:2 },
+    { id:"q26", type:"mcq", title:"¿Guardar objeto nuevo?", options:["persist()","save()","load()","get()"], ans:1 },
+    { id:"q27", type:"mcq", title:"¿Lenguaje query Hibernate?", options:["SQL","JPQL","HQL","CQL"], ans:2 },
+    { id:"q28", type:"mcq", title:"¿Manejo de transacciones Hibernate?", options:["Session","Connection","Transaction","Query"], ans:2 },
+
+    { id:"q29", type:"code", 
+      title:"Anotación para Clase Persistente.", 
       code:`@_____
 @Table(name = "usuarios")
 public class Usuario {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "nombre_usuario")
-    private String nombre;
-
-    // getters y setters...
+    // ...
 }`,
-      must:["@entity"],
-      show:"@Entity",
-      memo:"Para que Hibernate/JPA la persista: @Entity arriba de la clase."
+      fullCode:`@Entity
+@Table(name = "usuarios")
+public class Usuario {
+    @Id
+    private Long id;
+    // ...
+}`,
+      must:["@entity"], show:"@Entity",
+      memo:"@Entity es obligatorio para decirle a Hibernate que esta clase se debe convertir en una tabla SQL." 
     },
 
-    // Código 30
-    { id:"q30", type:"code",
-      title:"Completa: ¿Qué métodos faltan y por qué es fundamental cerrar la sesión en el bloque finally?",
-      code:`SessionFactory factory = new Configuration()
-        .configure()
-        .buildSessionFactory();
-
-Session session = factory.openSession();
+    { id:"q30", type:"code", 
+      title:"Guardar y Cerrar Sesión.", 
+      code:`Session session = factory.openSession();
 Transaction tx = session.beginTransaction();
-
 try {
-    Usuario usuario = new Usuario();
-    usuario.setNombre("Ana");
-    session._____(usuario);
+    Usuario u = new Usuario();
+    session._____(u); // Guardar
     tx.commit();
-} catch (Exception e) {
-    tx.rollback();
 } finally {
-    session._____();
+    session._____(); // Cerrar
 }`,
-      must:["save","close"],
-      show:"save() y close()",
-      memo:"Guardar: session.save(obj). Siempre cerrar: session.close() en finally."
-    },
+      fullCode:`Session session = factory.openSession();
+Transaction tx = session.beginTransaction();
+try {
+    Usuario u = new Usuario();
+    session.save(u); // Guardar
+    tx.commit();
+} finally {
+    session.close(); // Cerrar
+}`,
+      must:["save","close"], show:"save() y close()",
+      memo:"save() guarda el objeto en la base de datos y close() cierra la conexión para no saturar el servidor." 
+    }
   ];
 
-  // ====== ESTADO ======
-  const state = {
-    validated: {}, // id -> {correct:boolean}
-    total: QUESTIONS.length
-  };
+  const state = { answers: {} };
 
-  // ====== HELPERS ======
-  function norm(s){
-    return (s || "")
-      .toString()
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g,"")
-      .replace(/;+/g,";");
-  }
-  function containsAll(input, mustArr){
-    return mustArr.every(token => input.includes(token));
-  }
-  function escapeHtml(s){
-    return s.replace(/[&<>"']/g, m => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-    }[m]));
-  }
-  function updateProgress(){
-    const validatedCount = Object.keys(state.validated).length;
-    const correctCount = Object.values(state.validated).filter(x => x.correct).length;
-    document.getElementById("progressPill").textContent = `${validatedCount} validadas`;
-    document.getElementById("scorePill").textContent = `${correctCount} correctas`;
-  }
-  function setStatus(id, ok, correctText){
-    const el = document.getElementById(id + "_status");
-    el.classList.remove("hidden","ok","bad");
-    el.classList.add(ok ? "ok" : "bad");
-    el.innerHTML = ok
-      ? `✅ <b>Correcto</b>.`
-      : `❌ <b>Incorrecto</b>.<span class="small">✅ Correcta: <b>${escapeHtml(correctText)}</b></span>`;
-  }
-
-  // ====== RENDER ======
   function render(){
     const app = document.getElementById("app");
-    app.innerHTML = QUESTIONS.map((q, idx) => {
-      const n = idx + 1;
-
+    app.innerHTML = QUESTIONS.map((q, i) => {
+      const num = i + 1;
+      
+      // RENDERIZADO PREGUNTAS TIPO TEST (MCQ)
       if(q.type === "mcq"){
-        const opts = q.options.map((opt, oi) => `
-          <div class="opt">
-            <input type="radio" name="${q.id}_radio" id="${q.id}_opt_${oi}" value="${oi}">
-            <div>
-              <div><b>${String.fromCharCode(65+oi)})</b> ${escapeHtml(opt)}</div>
-            </div>
-          </div>
+        const optsHtml = q.options.map((opt, idx) => `
+          <label class="opt">
+            <input type="radio" name="g_${q.id}" value="${idx}">
+            <span><b>${String.fromCharCode(65+idx)})</b> ${opt}</span>
+          </label>
         `).join("");
 
         return `
-          <section class="card" data-qid="${q.id}">
-            <div class="qhead">
-              <div>
-                <div class="badge">Pregunta ${n} · Tipo test</div>
-                <div class="qtitle">${escapeHtml(q.title)}</div>
-              </div>
+          <div class="card" id="card_${q.id}">
+            <div class="badge">TEST #${num}</div>
+            <div class="qtitle">${q.title}</div>
+            <div class="options">${optsHtml}</div>
+            <div class="btn-row">
+                <button class="btn-validate" onclick="validate('${q.id}')">Comprobar</button>
             </div>
-
-            <div class="options">${opts}</div>
-
-            <div class="row">
-              <button class="btn-primary" onclick="validateMCQ('${q.id}', ${q.answerIndex})">Validar respuesta</button>
-            </div>
-            <div id="${q.id}_status" class="status hidden"></div>
-          </section>
+            <div id="status_${q.id}" class="status"></div>
+          </div>
         `;
       }
 
-      // code question
+      // RENDERIZADO PREGUNTAS TIPO CÓDIGO + ARGUMENTACIÓN
       return `
-        <section class="card" data-qid="${q.id}">
-          <div class="qhead">
-            <div>
-              <div class="badge">Pregunta ${n} · Completar / Código</div>
-              <div class="qtitle">${escapeHtml(q.title)}</div>
-              <p class="prompt">Escribe el código completo o al menos lo necesario para completar los huecos.</p>
-            </div>
+        <div class="card" id="card_${q.id}">
+          <div class="badge">CÓDIGO #${num}</div>
+          <div class="qtitle">${q.title}</div>
+          
+          <div style="font-size:13px; color:#aaa; margin-bottom:5px;">Código incompleto:</div>
+          <pre><code>${q.code}</code></pre>
+          
+          <label class="arg-label">Completa el código (los huecos):</label>
+          <input type="text" id="in_${q.id}" placeholder="Escribe tu respuesta aquí...">
+          
+          <div class="btn-row">
+            <button class="btn-validate" onclick="validate('${q.id}')">Validar y Ver Justificación</button>
           </div>
-
-          <pre><code>${escapeHtml(q.code)}</code></pre>
-
-          <label for="${q.id}_input">Tu respuesta:</label>
-          <input id="${q.id}_input" type="text" placeholder="Escribe aquí..." />
-
-          <div class="row">
-            <button class="btn-primary" onclick="validateCode('${q.id}')">Validar respuesta</button>
-            <span class="hint">Se acepta si contiene las palabras clave correctas (aunque escribas más código).</span>
+          
+          <div id="status_${q.id}" class="status"></div>
+          
+          <div id="memo_${q.id}" class="status memo-box hidden">
+             <strong>Argumentación (Memoriza):</strong>
+             <p style="margin:5px 0 10px;">${q.memo}</p>
+             <div style="font-weight:bold; color:#fff; font-size:12px;">CÓDIGO COMPLETO (SOLUCIÓN):</div>
+             <pre class="solution-code"><code>${q.fullCode}</code></pre>
           </div>
-          <div id="${q.id}_status" class="status hidden"></div>
-
-          <div class="memo"><b>Para memorizar:</b> ${escapeHtml(q.memo || "")}</div>
-        </section>
+        </div>
       `;
     }).join("");
   }
 
-  // ====== VALIDACIONES ======
-  function validateMCQ(id, answerIndex){
-    const radios = document.querySelectorAll(`input[name="${id}_radio"]`);
-    let chosen = null;
-    radios.forEach(r => { if(r.checked) chosen = Number(r.value); });
-
-    const ok = chosen === answerIndex;
-    state.validated[id] = { correct: ok };
-
-    const correctText = `${String.fromCharCode(65+answerIndex)}) ${QUESTIONS.find(q=>q.id===id).options[answerIndex]}`;
-    setStatus(id, ok, correctText);
-    updateProgress();
-  }
-
-  function validateCode(id){
+  function validate(id){
     const q = QUESTIONS.find(x => x.id === id);
-    const input = norm(document.getElementById(id + "_input").value);
-    const ok = containsAll(input, q.must);
+    const statusEl = document.getElementById(`status_${id}`);
+    
+    let isCorrect = false;
 
-    state.validated[id] = { correct: ok };
-    setStatus(id, ok, q.show);
-    updateProgress();
+    if(q.type === "mcq"){
+      const checked = document.querySelector(`input[name="g_${id}"]:checked`);
+      if(!checked){
+        statusEl.className = "status show";
+        statusEl.innerHTML = "⚠️ Selecciona una opción.";
+        return;
+      }
+      const val = parseInt(checked.value);
+      isCorrect = (val === q.ans);
+      
+      statusEl.className = `status show ${isCorrect ? 'ok' : 'bad'}`;
+      statusEl.innerHTML = isCorrect 
+        ? "✅ ¡Correcto!" 
+        : `❌ Incorrecto. La correcta es: <b>${q.options[q.ans]}</b>`;
+
+    } else {
+      // Validación código
+      const inputVal = (document.getElementById(`in_${id}`).value || "").toLowerCase().trim();
+      const codeOk = q.must.every(k => inputVal.includes(k));
+      isCorrect = codeOk;
+
+      statusEl.className = `status show ${isCorrect ? 'ok' : 'bad'}`;
+      
+      let msg = "";
+      if(codeOk) msg += "✅ Muy bien. Respuesta correcta.<br>";
+      else msg += `❌ Incorrecto. (Faltaba: <b>${q.show}</b>)<br>`;
+      
+      statusEl.innerHTML = msg;
+      
+      // MOSTRAR LA ARGUMENTACIÓN JUSTIFICATIVA SIEMPRE AL FINAL
+      document.getElementById(`memo_${id}`).classList.remove("hidden");
+    }
+
+    state.answers[id] = isCorrect;
+    updateScore();
   }
 
-  // ====== FINAL / RESET ======
-  function finalizeTest(){
-    const validatedCount = Object.keys(state.validated).length;
-    const correctCount = Object.values(state.validated).filter(x => x.correct).length;
+  function updateScore(){
+    const correctas = Object.values(state.answers).filter(Boolean).length;
+    document.getElementById("scoreText").textContent = `${correctas} / ${QUESTIONS.length} Aciertos`;
+  }
 
-    // No contestadas cuentan como falladas para aprobar
-    const notAnswered = state.total - validatedCount;
-    const wrongTotal = (validatedCount - correctCount) + notAnswered;
-
-    const percent = Math.round((correctCount / state.total) * 100);
-    const passed = percent >= 60;
-
-    const box = document.getElementById("finalStatus");
-    box.classList.remove("hidden");
-    box.innerHTML = `
-      <div class="qhead">
-        <div>
-          <div class="badge">Resultado final</div>
-          <div class="qtitle">${passed ? "✅ Superaste el test" : "❌ No superaste el test"}</div>
-          <p class="prompt">
-            Total: <b>${state.total}</b> · Correctas: <b>${correctCount}</b> · Incorrectas: <b>${wrongTotal}</b> · Porcentaje: <b>${percent}%</b>
-          </p>
-          <div class="status ${passed ? "ok" : "bad"}" style="margin-top:10px;">
-            ${passed
-              ? "Buen trabajo. Repite el test hasta sacar 90–100%."
-              : "Repasa las que fallaste. Valida cada pregunta para ver la correcta."
-            }
-            <span class="small">Nota: las no validadas cuentan como falladas para aprobar.</span>
-          </div>
-        </div>
-      </div>
-    `;
-    box.scrollIntoView({behavior:"smooth", block:"start"});
+  function checkAll(){
+    QUESTIONS.forEach(q => validate(q.id));
   }
 
   function resetTest(){
-    // borrar radios + inputs + estados
-    QUESTIONS.forEach(q => {
-      const st = document.getElementById(q.id + "_status");
-      if(st){ st.className = "status hidden"; st.innerHTML=""; }
-      if(q.type === "mcq"){
-        document.querySelectorAll(`input[name="${q.id}_radio"]`).forEach(r => r.checked = false);
-      } else {
-        const inp = document.getElementById(q.id + "_input");
-        if(inp) inp.value = "";
-      }
-    });
-
-    state.validated = {};
-    updateProgress();
-
-    const box = document.getElementById("finalStatus");
-    box.classList.add("hidden");
-    box.innerHTML = "";
-
-    window.scrollTo({top:0, behavior:"smooth"});
+    if(confirm("¿Reiniciar todo?")){
+       state.answers = {};
+       render();
+       updateScore();
+       window.scrollTo(0,0);
+    }
   }
 
-  // init
+  // Init
   render();
-  updateProgress();
 </script>
 </body>
 </html>
-
