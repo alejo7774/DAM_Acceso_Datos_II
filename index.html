@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Test Código (Java IO/JDBC/Hibernate)</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --card:#121a33;
+      --muted:#9fb0ff;
+      --text:#eef2ff;
+      --ok:#2ee59d;
+      --bad:#ff5c7a;
+      --warn:#ffd36a;
+      --border: rgba(255,255,255,.10);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1000px 600px at 10% 0%, #1b2a6a 0%, var(--bg) 55%);
+      color:var(--text);
+      line-height:1.35;
+    }
+    header{
+      padding:28px 16px 10px;
+      text-align:center;
+    }
+    header h1{
+      margin:0 0 6px;
+      font-size:20px;
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+    header p{
+      margin:0;
+      color:rgba(238,242,255,.8);
+      font-size:13px;
+    }
+    .container{
+      max-width:980px;
+      margin:0 auto;
+      padding:16px;
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:16px;
+      margin:14px 0;
+      box-shadow: 0 10px 25px rgba(0,0,0,.25);
+    }
+    .qhead{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .badge{
+      font-size:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      background: rgba(159,176,255,.18);
+      color: var(--muted);
+      border:1px solid rgba(159,176,255,.25);
+      white-space:nowrap;
+    }
+    .qtitle{
+      margin:6px 0 10px;
+      font-size:16px;
+      font-weight:750;
+    }
+    .prompt{
+      color:rgba(238,242,255,.86);
+      margin:0 0 12px;
+      font-size:13px;
+    }
+    pre{
+      margin:10px 0 12px;
+      padding:12px;
+      border-radius:12px;
+      overflow:auto;
+      background: rgba(0,0,0,.25);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    code{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12.5px;}
+    label{
+      display:block;
+      font-size:12px;
+      color:rgba(238,242,255,.8);
+      margin:6px 0 6px;
+    }
+    textarea, input[type="text"]{
+      width:100%;
+      padding:12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      color:var(--text);
+      outline:none;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size:13px;
+      resize:vertical;
+      min-height:54px;
+    }
+    textarea:focus, input[type="text"]:focus{
+      border-color: rgba(159,176,255,.45);
+      box-shadow: 0 0 0 4px rgba(159,176,255,.12);
+    }
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:10px;
+    }
+    button{
+      cursor:pointer;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.08);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      font-weight:700;
+      font-size:13px;
+      transition: transform .05s ease, background .2s ease, border-color .2s ease;
+    }
+    button:hover{ background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.22); }
+    button:active{ transform: translateY(1px); }
+    .btn-primary{
+      background: rgba(46,229,157,.14);
+      border-color: rgba(46,229,157,.35);
+    }
+    .btn-primary:hover{ background: rgba(46,229,157,.18); }
+    .btn-warn{
+      background: rgba(255,211,106,.14);
+      border-color: rgba(255,211,106,.35);
+    }
+    .status{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      font-size:13px;
+    }
+    .status.ok{ border-color: rgba(46,229,157,.35); background: rgba(46,229,157,.10); }
+    .status.bad{ border-color: rgba(255,92,122,.35); background: rgba(255,92,122,.10); }
+    .status .small{
+      display:block;
+      margin-top:6px;
+      font-size:12px;
+      color: rgba(238,242,255,.82);
+    }
+    .memo{
+      margin-top:12px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px dashed rgba(159,176,255,.35);
+      background: rgba(159,176,255,.08);
+      color: rgba(238,242,255,.9);
+      font-size:13px;
+    }
+    .memo b{ color: var(--muted); }
+    .footer-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      align-items:center;
+      margin:18px 0 26px;
+      padding:14px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.18);
+    }
+    .scorebox{
+      font-size:13px;
+      color:rgba(238,242,255,.86);
+    }
+    .scorebox strong{ color: var(--text); }
+    .pill{
+      display:inline-block;
+      padding:5px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.07);
+      margin-left:8px;
+      font-size:12px;
+      color: rgba(238,242,255,.9);
+    }
+    .hidden{ display:none; }
+    .hint{
+      font-size:12px;
+      color: rgba(238,242,255,.72);
+      margin-top:8px;
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <h1>Test de Código (Completar/Escribir) — Java IO · JDBC · Hibernate</h1>
+  <p>Responde en los campos. Valida cada pregunta. Al final pulsa <b>Finalizar</b> para ver tu resultado.</p>
+</header>
+
+<div class="container">
+
+  <!-- Q9 -->
+  <section class="card" data-qid="q9">
+    <div class="qhead">
+      <div>
+        <div class="badge">Pregunta 9 · IO Escritura</div>
+        <div class="qtitle">Completa el código: ¿Qué clase debes usar para escribir texto de forma sencilla?</div>
+        <p class="prompt">Escribe el código completo o, al menos, la clase correcta en el hueco.</p>
+      </div>
+    </div>
+
+    <pre><code>try (_____ writer = new _____("archivo.txt")) {
+    writer.write("Hola mundo");
+} catch (IOException e) {
+    e.printStackTrace();
+}</code></pre>
+
+    <label for="q9_input">Tu respuesta (puedes escribir el fragmento completo o solo la clase):</label>
+    <input id="q9_input" type="text" placeholder='Ej: FileWriter  |  o: try (FileWriter writer = new FileWriter("archivo.txt")) {...}' />
+
+    <div class="row">
+      <button class="btn-primary" onclick="validate('q9')">Validar respuesta</button>
+      <span class="hint">Se acepta: “FileWriter” (sin package) o un fragmento que lo contenga.</span>
+    </div>
+    <div id="q9_status" class="status hidden"></div>
+
+    <div class="memo"><b>Para memorizar:</b> Para escribir texto simple a un archivo → <b>FileWriter</b>.</div>
+  </section>
+
+  <!-- Q10 -->
+  <section class="card" data-qid="q10">
+    <div class="qhead">
+      <div>
+        <div class="badge">Pregunta 10 · IO Lectura</div>
+        <div class="qtitle">Completa el método que falta en BufferedReader</div>
+        <p class="prompt">Falta el método que lee una línea completa.</p>
+      </div>
+    </div>
+
+    <pre><code>try (BufferedReader reader = new BufferedReader(new FileReader("datos.txt"))) {
+    String linea;
+    while ((linea = reader.____()) != null) {
+        System.out.println(linea);
+    }
+}</code></pre>
+
+    <label for="q10_input">Tu respuesta (método o fragmento completo):</label>
+    <input id="q10_input" type="text" placeholder="Ej: readLine()  |  o: while((linea = reader.readLine()) != null) {...}" />
+
+    <div class="row">
+      <button class="btn-primary" onclick="validate('q10')">Validar respuesta</button>
+      <span class="hint">Se acepta: “readLine()” o un fragmento que lo contenga.</span>
+    </div>
+    <div id="q10_status" class="status hidden"></div>
+
+    <div class="memo"><b>Para memorizar:</b> Leer línea a línea con BufferedReader → <b>readLine()</b>. (Más eficiente porque usa buffer).</div>
+  </section>
+
+  <!-- Q19 -->
+  <section class="card" data-qid="q19">
+    <div class="qhead">
+      <div>
+        <div class="badge">Pregunta 19 · JDBC Transacción</div>
+        <div class="qtitle">Completa: interfaz de conexión y método para confirmar transacción</div>
+        <p class="prompt">Hay que completar el tipo de <code>conn</code> y el método de confirmación.</p>
+      </div>
+    </div>
+
+    <pre><code>_____ conn = DriverManager.getConnection(url, user, pass);
+conn.setAutoCommit(false);
+
+try {
+    PreparedStatement stmt = conn.prepareStatement(
+        "INSERT INTO usuarios VALUES (?, ?)"
+    );
+    stmt.setString(1, "Juan");
+    stmt.setString(2, "juan@email.com");
+    stmt.executeUpdate();
+    conn._____();
+} catch (SQLException e) {
+    conn.rollback();
+}</code></pre>
+
+    <label for="q19_input">Tu respuesta (puedes escribir “Connection, commit” o el código completo):</label>
+    <input id="q19_input" type="text" placeholder="Ej: Connection, commit  |  o: Connection conn = ...; conn.commit();" />
+
+    <div class="row">
+      <button class="btn-primary" onclick="validate('q19')">Validar respuesta</button>
+      <span class="hint">Se acepta si incluye <b>Connection</b> y <b>commit()</b>.</span>
+    </div>
+    <div id="q19_status" class="status hidden"></div>
+
+    <div class="memo"><b>Para memorizar:</b> En JDBC: conexión = <b>Connection</b>. Para confirmar transacción → <b>commit()</b>. Si falla → <b>rollback()</b>.</div>
+  </section>
+
+  <!-- Q20 -->
+  <section class="card" data-qid="q20">
+    <div class="qhead">
+      <div>
+        <div class="badge">Pregunta 20 · JDBC Resultados</div>
+        <div class="qtitle">Completa: interfaz del resultado de un SELECT</div>
+        <p class="prompt">El resultado de <code>executeQuery()</code> se guarda en una interfaz concreta.</p>
+      </div>
+    </div>
+
+    <pre><code>Connection conn = DriverManager.getConnection(url);
+PreparedStatement stmt = conn.prepareStatement(
+    "SELECT * FROM productos WHERE precio > ?"
+);
+stmt.setDouble(1, 100.0);
+_____ rs = stmt.executeQuery();
+
+while (rs.next()) {
+    System.out.println(rs.getString("nombre"));
+}</code></pre>
+
+    <label for="q20_input">Tu respuesta (interfaz o fragmento):</label>
+    <input id="q20_input" type="text" placeholder="Ej: ResultSet  |  o: ResultSet rs = stmt.executeQuery();" />
+
+    <div class="row">
+      <button class="btn-primary" onclick="validate('q20')">Validar respuesta</button>
+      <span class="hint">Se acepta: “ResultSet” o un fragmento que lo contenga.</span>
+    </div>
+    <div id="q20_status" class="status hidden"></div>
+
+    <div class="memo"><b>Para memorizar:</b> SELECT en JDBC → devuelve <b>ResultSet</b>. Siempre cerrar recursos (close / try-with-resources).</div>
+  </section>
+
+  <!-- Q29 -->
+  <section class="card" data-qid="q29">
+    <div class="qhead">
+      <div>
+        <div class="badge">Pregunta 29 · Hibernate Entidad</div>
+        <div class="qtitle">Completa: anotación para marcar una clase como entidad</div>
+        <p class="prompt">Falta la anotación al inicio para que Hibernate/JPA trate la clase como persistente.</p>
+      </div>
+    </div>
+
+    <pre><code>@_____
+@Table(name = "usuarios")
+public class Usuario {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nombre_usuario")
+    private String nombre;
+
+    // getters y setters...
+}</code></pre>
+
+    <label for="q29_input">Tu respuesta (anotación o fragmento):</label>
+    <input id="q29_input" type="text" placeholder="Ej: @Entity" />
+
+    <div class="row">
+      <button class="btn-primary" onclick="validate('q29')">Validar respuesta</button>
+      <span class="hint">Se acepta: “@Entity” (con o sin espacios alrededor).</span>
+    </div>
+    <div id="q29_status" class="status hidden"></div>
+
+    <div class="memo"><b>Para memorizar:</b> Clase persistente en Hibernate/JPA → <b>@Entity</b>.</div>
+  </section>
+
+  <!-- Q30 -->
+  <section class="card" data-qid="q30">
+    <div class="qhead">
+      <div>
+        <div class="badge">Pregunta 30 · Hibernate Sesión</div>
+        <div class="qtitle">Completa: método para guardar y método para cerrar sesión</div>
+        <p class="prompt">Faltan dos métodos: uno para persistir y otro para cerrar en <code>finally</code>.</p>
+      </div>
+    </div>
+
+    <pre><code>SessionFactory factory = new Configuration()
+        .configure()
+        .buildSessionFactory();
+
+Session session = factory.openSession();
+Transaction tx = session.beginTransaction();
+
+try {
+    Usuario usuario = new Usuario();
+    usuario.setNombre("Ana");
+    session._____(usuario);
+    tx.commit();
+} catch (Exception e) {
+    tx.rollback();
+} finally {
+    session._____();
+}</code></pre>
+
+    <label for="q30_input">Tu respuesta (puedes escribir “save, close” o el fragmento completo):</label>
+    <input id="q30_input" type="text" placeholder="Ej: save, close  |  o: session.save(usuario); ... finally { session.close(); }" />
+
+    <div class="row">
+      <button class="btn-primary" onclick="validate('q30')">Validar respuesta</button>
+      <span class="hint">Se acepta si incluye <b>save</b> y <b>close</b> (con o sin paréntesis).</span>
+    </div>
+    <div id="q30_status" class="status hidden"></div>
+
+    <div class="memo"><b>Para memorizar:</b> Guardar en Hibernate → <b>session.save(obj)</b>. Siempre cerrar → <b>session.close()</b> en finally.</div>
+  </section>
+
+  <!-- Final actions -->
+  <div class="footer-actions">
+    <div class="scorebox">
+      Progreso:
+      <span class="pill" id="progressPill">0 validadas</span>
+      <span class="pill" id="scorePill">0 correctas</span>
+    </div>
+    <div class="row">
+      <button class="btn-warn" onclick="finalizeTest()">Finalizar</button>
+      <button onclick="resetTest()">Reiniciar</button>
+    </div>
+  </div>
+
+  <div id="finalStatus" class="card hidden"></div>
+
+</div>
+
+<script>
+  // Respuestas correctas (se validan por "contiene", para permitir código completo)
+  const ANSWERS = {
+    q9:  { must: ["filewriter"], show: 'FileWriter' },
+    q10: { must: ["readline"], show: 'readLine()' },
+    q19: { must: ["connection", "commit"], show: 'Connection + commit()' },
+    q20: { must: ["resultset"], show: 'ResultSet' },
+    q29: { must: ["@entity"], show: '@Entity' },
+    q30: { must: ["save", "close"], show: 'save() + close()' }
+  };
+
+  const state = {
+    validated: {}, // qid -> {correct:boolean}
+    total: Object.keys(ANSWERS).length
+  };
+
+  function norm(s){
+    return (s || "")
+      .toString()
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g,"")
+      .replace(/;+/g,";"); // mínimo
+  }
+
+  function containsAll(input, mustArr){
+    return mustArr.every(token => input.includes(token));
+  }
+
+  function setStatus(qid, ok, msg, correctText){
+    const el = document.getElementById(qid + "_status");
+    el.classList.remove("hidden","ok","bad");
+    el.classList.add(ok ? "ok" : "bad");
+    el.innerHTML = ok
+      ? `✅ <b>Correcto</b>. ${msg || ""}`
+      : `❌ <b>Incorrecto</b>. ${msg || ""}<span class="small">✅ Correcta: <b>${correctText}</b></span>`;
+  }
+
+  function validate(qid){
+    const inputEl = document.getElementById(qid + "_input");
+    const raw = inputEl.value;
+    const n = norm(raw);
+
+    const rule = ANSWERS[qid];
+    const ok = containsAll(n, rule.must);
+
+    // Guardar estado validado (si revalida, se actualiza)
+    state.validated[qid] = { correct: ok };
+
+    setStatus(
+      qid,
+      ok,
+      ok ? "Bien." : "Revisa los huecos/palabras clave.",
+      rule.show
+    );
+
+    updateProgress();
+  }
+
+  function updateProgress(){
+    const validatedCount = Object.keys(state.validated).length;
+    const correctCount = Object.values(state.validated).filter(x => x.correct).length;
+
+    document.getElementById("progressPill").textContent = `${validatedCount} validadas`;
+    document.getElementById("scorePill").textContent = `${correctCount} correctas`;
+  }
+
+  function finalizeTest(){
+    const validatedCount = Object.keys(state.validated).length;
+    const correctCount = Object.values(state.validated).filter(x => x.correct).length;
+    const wrongCount = validatedCount - correctCount;
+
+    // Consideramos no respondidas como falladas para el "superado"
+    const notValidated = state.total - validatedCount;
+    const totalWrongForPass = wrongCount + notValidated;
+
+    const percent = Math.round((correctCount / state.total) * 100);
+    const passed = percent >= 60;
+
+    const box = document.getElementById("finalStatus");
+    box.classList.remove("hidden");
+    box.innerHTML = `
+      <div class="qhead">
+        <div>
+          <div class="badge">Resultado final</div>
+          <div class="qtitle">${passed ? "✅ Superaste el test" : "❌ No superaste el test"}</div>
+          <p class="prompt">
+            Total preguntas: <b>${state.total}</b> · Correctas: <b>${correctCount}</b> · Incorrectas: <b>${totalWrongForPass}</b>
+            · Porcentaje: <b>${percent}%</b>
+          </p>
+          <div class="status ${passed ? "ok" : "bad"}" style="margin-top:10px;">
+            ${passed
+              ? "Vas bien. Mantén estas 6 respuestas de código muy claras."
+              : "Te falta repasar. Enfócate en: FileWriter, readLine, Connection/commit, ResultSet, @Entity, save/close."
+            }
+            <span class="small">
+              Nota: Las no validadas cuentan como falladas para calcular si superas.
+            </span>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Scroll al resultado
+    box.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function resetTest(){
+    // limpiar inputs
+    for(const qid of Object.keys(ANSWERS)){
+      const inputEl = document.getElementById(qid + "_input");
+      inputEl.value = "";
+      const statusEl = document.getElementById(qid + "_status");
+      statusEl.className = "status hidden";
+      statusEl.innerHTML = "";
+    }
+    state.validated = {};
+    updateProgress();
+
+    const box = document.getElementById("finalStatus");
+    box.classList.add("hidden");
+    box.innerHTML = "";
+
+    // subir arriba
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+</script>
+</body>
+</html>
