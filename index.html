@@ -1,18 +1,13 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Test Código (Java IO/JDBC/Hibernate)</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Test completo (30) — Java IO/NIO · XML · JDBC · Hibernate</title>
   <style>
     :root{
-      --bg:#0b1020;
-      --card:#121a33;
-      --muted:#9fb0ff;
-      --text:#eef2ff;
-      --ok:#2ee59d;
-      --bad:#ff5c7a;
-      --warn:#ffd36a;
+      --bg:#0b1020; --card:#121a33; --muted:#9fb0ff; --text:#eef2ff;
+      --ok:#2ee59d; --bad:#ff5c7a; --warn:#ffd36a;
       --border: rgba(255,255,255,.10);
     }
     *{box-sizing:border-box}
@@ -23,26 +18,10 @@
       color:var(--text);
       line-height:1.35;
     }
-    header{
-      padding:28px 16px 10px;
-      text-align:center;
-    }
-    header h1{
-      margin:0 0 6px;
-      font-size:20px;
-      font-weight:800;
-      letter-spacing:.2px;
-    }
-    header p{
-      margin:0;
-      color:rgba(238,242,255,.8);
-      font-size:13px;
-    }
-    .container{
-      max-width:980px;
-      margin:0 auto;
-      padding:16px;
-    }
+    header{padding:26px 16px 10px; text-align:center;}
+    header h1{margin:0 0 6px; font-size:20px; font-weight:850;}
+    header p{margin:0; color:rgba(238,242,255,.8); font-size:13px;}
+    .container{max-width:980px; margin:0 auto; padding:16px;}
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
       border:1px solid var(--border);
@@ -51,47 +30,30 @@
       margin:14px 0;
       box-shadow: 0 10px 25px rgba(0,0,0,.25);
     }
-    .qhead{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      justify-content:space-between;
-      flex-wrap:wrap;
-    }
+    .qhead{display:flex; gap:10px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap;}
     .badge{
-      font-size:12px;
-      padding:6px 10px;
-      border-radius:999px;
+      font-size:12px; padding:6px 10px; border-radius:999px;
       background: rgba(159,176,255,.18);
       color: var(--muted);
       border:1px solid rgba(159,176,255,.25);
       white-space:nowrap;
     }
-    .qtitle{
-      margin:6px 0 10px;
-      font-size:16px;
-      font-weight:750;
-    }
-    .prompt{
-      color:rgba(238,242,255,.86);
-      margin:0 0 12px;
-      font-size:13px;
-    }
+    .qtitle{margin:6px 0 10px; font-size:16px; font-weight:780;}
+    .prompt{color:rgba(238,242,255,.86); margin:0 0 10px; font-size:13px;}
     pre{
-      margin:10px 0 12px;
-      padding:12px;
-      border-radius:12px;
-      overflow:auto;
-      background: rgba(0,0,0,.25);
-      border:1px solid rgba(255,255,255,.08);
+      margin:10px 0 12px; padding:12px; border-radius:12px; overflow:auto;
+      background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.08);
     }
     code{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12.5px;}
-    label{
-      display:block;
-      font-size:12px;
-      color:rgba(238,242,255,.8);
-      margin:6px 0 6px;
+    .options{display:grid; gap:8px; margin-top:10px;}
+    .opt{
+      display:flex; gap:10px; align-items:flex-start;
+      padding:10px 12px; border-radius:12px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.14);
     }
+    .opt input{margin-top:3px}
+    label{display:block; font-size:12px; color:rgba(238,242,255,.8); margin:6px 0 6px;}
     textarea, input[type="text"]{
       width:100%;
       padding:12px;
@@ -109,13 +71,7 @@
       border-color: rgba(159,176,255,.45);
       box-shadow: 0 0 0 4px rgba(159,176,255,.12);
     }
-    .row{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      margin-top:10px;
-    }
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:10px;}
     button{
       cursor:pointer;
       border:1px solid rgba(255,255,255,.14);
@@ -123,41 +79,26 @@
       color:var(--text);
       padding:10px 12px;
       border-radius:12px;
-      font-weight:700;
+      font-weight:750;
       font-size:13px;
-      transition: transform .05s ease, background .2s ease, border-color .2s ease;
     }
     button:hover{ background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.22); }
     button:active{ transform: translateY(1px); }
-    .btn-primary{
-      background: rgba(46,229,157,.14);
-      border-color: rgba(46,229,157,.35);
-    }
+    .btn-primary{ background: rgba(46,229,157,.14); border-color: rgba(46,229,157,.35); }
     .btn-primary:hover{ background: rgba(46,229,157,.18); }
-    .btn-warn{
-      background: rgba(255,211,106,.14);
-      border-color: rgba(255,211,106,.35);
-    }
+    .btn-warn{ background: rgba(255,211,106,.14); border-color: rgba(255,211,106,.35); }
+    .btn-warn:hover{ background: rgba(255,211,106,.18); }
     .status{
-      margin-top:10px;
-      padding:10px 12px;
-      border-radius:12px;
+      margin-top:10px; padding:10px 12px; border-radius:12px;
       border:1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.18);
       font-size:13px;
     }
     .status.ok{ border-color: rgba(46,229,157,.35); background: rgba(46,229,157,.10); }
     .status.bad{ border-color: rgba(255,92,122,.35); background: rgba(255,92,122,.10); }
-    .status .small{
-      display:block;
-      margin-top:6px;
-      font-size:12px;
-      color: rgba(238,242,255,.82);
-    }
+    .status .small{display:block; margin-top:6px; font-size:12px; color: rgba(238,242,255,.82);}
     .memo{
-      margin-top:12px;
-      padding:10px 12px;
-      border-radius:12px;
+      margin-top:12px; padding:10px 12px; border-radius:12px;
       border:1px dashed rgba(159,176,255,.35);
       background: rgba(159,176,255,.08);
       color: rgba(238,242,255,.9);
@@ -165,117 +106,166 @@
     }
     .memo b{ color: var(--muted); }
     .footer-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:space-between;
-      align-items:center;
+      display:flex; gap:10px; flex-wrap:wrap;
+      justify-content:space-between; align-items:center;
       margin:18px 0 26px;
-      padding:14px;
-      border-radius:14px;
+      padding:14px; border-radius:14px;
       border:1px solid var(--border);
       background: rgba(0,0,0,.18);
     }
-    .scorebox{
-      font-size:13px;
-      color:rgba(238,242,255,.86);
-    }
-    .scorebox strong{ color: var(--text); }
+    .scorebox{font-size:13px; color:rgba(238,242,255,.86);}
     .pill{
-      display:inline-block;
-      padding:5px 10px;
-      border-radius:999px;
+      display:inline-block; padding:5px 10px; border-radius:999px;
       border:1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.07);
-      margin-left:8px;
-      font-size:12px;
-      color: rgba(238,242,255,.9);
+      margin-left:8px; font-size:12px; color: rgba(238,242,255,.9);
     }
-    .hidden{ display:none; }
-    .hint{
-      font-size:12px;
-      color: rgba(238,242,255,.72);
-      margin-top:8px;
-    }
+    .hidden{display:none;}
+    .hint{font-size:12px; color: rgba(238,242,255,.72); margin-top:8px;}
   </style>
 </head>
 
 <body>
 <header>
-  <h1>Test de Código (Completar/Escribir) — Java IO · JDBC · Hibernate</h1>
-  <p>Responde en los campos. Valida cada pregunta. Al final pulsa <b>Finalizar</b> para ver tu resultado.</p>
+  <h1>Test completo (30) — Java IO/NIO · XML · JDBC · Hibernate</h1>
+  <p>Valida cada pregunta. Al final pulsa <b>Finalizar</b> para ver tu nota. (Aprobado ≥ 60%)</p>
 </header>
 
+<div class="container" id="app"></div>
+
 <div class="container">
-
-  <!-- Q9 -->
-  <section class="card" data-qid="q9">
-    <div class="qhead">
-      <div>
-        <div class="badge">Pregunta 9 · IO Escritura</div>
-        <div class="qtitle">Completa el código: ¿Qué clase debes usar para escribir texto de forma sencilla?</div>
-        <p class="prompt">Escribe el código completo o, al menos, la clase correcta en el hueco.</p>
-      </div>
+  <div class="footer-actions">
+    <div class="scorebox">
+      Progreso:
+      <span class="pill" id="progressPill">0 validadas</span>
+      <span class="pill" id="scorePill">0 correctas</span>
     </div>
+    <div class="row">
+      <button class="btn-warn" onclick="finalizeTest()">Finalizar</button>
+      <button onclick="resetTest()">Reiniciar</button>
+    </div>
+  </div>
 
-    <pre><code>try (_____ writer = new _____("archivo.txt")) {
+  <div id="finalStatus" class="card hidden"></div>
+</div>
+
+<script>
+  // ====== BANCO DE PREGUNTAS (30) ======
+  // type: "mcq" (test) o "code" (texto/código)
+  const QUESTIONS = [
+    { id:"q1", type:"mcq",
+      title:"¿Cuál de las siguientes interfaces de Java NIO es más adecuada para representar rutas de archivos de forma independiente del sistema operativo?",
+      options:["File","Path","Files","Reader"],
+      answerIndex:1
+    },
+    { id:"q2", type:"mcq",
+      title:"¿Cuál es la principal ventaja de Java NIO frente a Java IO tradicional?",
+      options:["Es más simple de usar","Solo permite acceso secuencial","Mejor rendimiento y escalabilidad","Está limitado a ficheros XML"],
+      answerIndex:2
+    },
+    { id:"q3", type:"mcq",
+      title:"¿Qué tipo de flujo se utiliza para leer datos binarios en Java?",
+      options:["Reader","Writer","InputStream","Scanner"],
+      answerIndex:2
+    },
+    { id:"q4", type:"mcq",
+      title:"¿Cuál de los siguientes formatos permite estructurar datos jerárquicos mediante etiquetas?",
+      options:["CSV","JSON","XML","TXT"],
+      answerIndex:2
+    },
+    { id:"q5", type:"mcq",
+      title:"¿Qué parser XML es más adecuado para procesar ficheros XML de gran tamaño?",
+      options:["DOM","SAX","StAX","JDOM"],
+      answerIndex:1
+    },
+    { id:"q6", type:"mcq",
+      title:"¿Cómo se denomina el proceso de convertir documentos XML en objetos Java automáticamente?",
+      options:["Parsing","Marshalling","Binding","Serialización"],
+      answerIndex:2
+    },
+    { id:"q7", type:"mcq",
+      title:"¿Qué excepción se lanza cuando se intenta acceder a un fichero que no existe?",
+      options:["IOException","FileNotFoundException","SecurityException","IllegalArgumentException"],
+      answerIndex:1
+    },
+    { id:"q8", type:"mcq",
+      title:"¿Qué método es fundamental llamar para liberar recursos al trabajar con flujos?",
+      options:["flush()","reset()","close()","finalize()"],
+      answerIndex:2
+    },
+
+    // Código 9
+    { id:"q9", type:"code",
+      title:"Completa el código: ¿Qué clase debes usar para escribir texto de forma sencilla? (Escribe solo el nombre de la clase o el fragmento completo)",
+      code:`try (_____ writer = new _____("archivo.txt")) {
     writer.write("Hola mundo");
 } catch (IOException e) {
     e.printStackTrace();
-}</code></pre>
+}`,
+      must:["filewriter"],
+      show:"FileWriter",
+      memo:"Para escribir texto simple en un archivo → FileWriter."
+    },
 
-    <label for="q9_input">Tu respuesta (puedes escribir el fragmento completo o solo la clase):</label>
-    <input id="q9_input" type="text" placeholder='Ej: FileWriter  |  o: try (FileWriter writer = new FileWriter("archivo.txt")) {...}' />
-
-    <div class="row">
-      <button class="btn-primary" onclick="validate('q9')">Validar respuesta</button>
-      <span class="hint">Se acepta: “FileWriter” (sin package) o un fragmento que lo contenga.</span>
-    </div>
-    <div id="q9_status" class="status hidden"></div>
-
-    <div class="memo"><b>Para memorizar:</b> Para escribir texto simple a un archivo → <b>FileWriter</b>.</div>
-  </section>
-
-  <!-- Q10 -->
-  <section class="card" data-qid="q10">
-    <div class="qhead">
-      <div>
-        <div class="badge">Pregunta 10 · IO Lectura</div>
-        <div class="qtitle">Completa el método que falta en BufferedReader</div>
-        <p class="prompt">Falta el método que lee una línea completa.</p>
-      </div>
-    </div>
-
-    <pre><code>try (BufferedReader reader = new BufferedReader(new FileReader("datos.txt"))) {
+    // Código 10
+    { id:"q10", type:"code",
+      title:"Completa el método que falta y por qué BufferedReader es más eficiente que FileReader solo.",
+      code:`try (BufferedReader reader = new BufferedReader(new FileReader("datos.txt"))) {
     String linea;
     while ((linea = reader.____()) != null) {
         System.out.println(linea);
     }
-}</code></pre>
+}`,
+      must:["readline"],
+      show:"readLine()",
+      memo:"Leer línea a línea con BufferedReader → readLine(). (Más rápido por buffer)."
+    },
 
-    <label for="q10_input">Tu respuesta (método o fragmento completo):</label>
-    <input id="q10_input" type="text" placeholder="Ej: readLine()  |  o: while((linea = reader.readLine()) != null) {...}" />
+    { id:"q11", type:"mcq",
+      title:"¿Cuál es la interfaz principal de JDBC que representa una conexión a la base de datos?",
+      options:["Statement","ResultSet","Connection","DriverManager"],
+      answerIndex:2
+    },
+    { id:"q12", type:"mcq",
+      title:"¿Qué método se utiliza tradicionalmente para cargar un driver JDBC?",
+      options:["DriverManager.getConnection()","Class.forName()","Connection.createStatement()","Driver.load()"],
+      answerIndex:1
+    },
+    { id:"q13", type:"mcq",
+      title:"¿Qué interfaz se utiliza para ejecutar consultas SQL estáticas?",
+      options:["Connection","ResultSet","Statement","PreparedStatement"],
+      answerIndex:2
+    },
+    { id:"q14", type:"mcq",
+      title:"¿Cuál es la mejor opción para ejecutar consultas SQL con parámetros?",
+      options:["Statement","CallableStatement","PreparedStatement","BatchStatement"],
+      answerIndex:2
+    },
+    { id:"q15", type:"mcq",
+      title:"¿Qué método se utiliza para ejecutar consultas SELECT?",
+      options:["execute()","executeUpdate()","executeQuery()","executeBatch()"],
+      answerIndex:2
+    },
+    { id:"q16", type:"mcq",
+      title:"¿Qué interfaz representa el conjunto de resultados de una consulta SELECT?",
+      options:["Statement","Connection","ResultSet","PreparedStatement"],
+      answerIndex:2
+    },
+    { id:"q17", type:"mcq",
+      title:"¿Qué método se utiliza para confirmar una transacción?",
+      options:["commit()","rollback()","setAutoCommit()","savepoint()"],
+      answerIndex:0
+    },
+    { id:"q18", type:"mcq",
+      title:"¿Qué método es esencial llamar para liberar recursos de base de datos?",
+      options:["finalize()","close()","dispose()","release()"],
+      answerIndex:1
+    },
 
-    <div class="row">
-      <button class="btn-primary" onclick="validate('q10')">Validar respuesta</button>
-      <span class="hint">Se acepta: “readLine()” o un fragmento que lo contenga.</span>
-    </div>
-    <div id="q10_status" class="status hidden"></div>
-
-    <div class="memo"><b>Para memorizar:</b> Leer línea a línea con BufferedReader → <b>readLine()</b>. (Más eficiente porque usa buffer).</div>
-  </section>
-
-  <!-- Q19 -->
-  <section class="card" data-qid="q19">
-    <div class="qhead">
-      <div>
-        <div class="badge">Pregunta 19 · JDBC Transacción</div>
-        <div class="qtitle">Completa: interfaz de conexión y método para confirmar transacción</div>
-        <p class="prompt">Hay que completar el tipo de <code>conn</code> y el método de confirmación.</p>
-      </div>
-    </div>
-
-    <pre><code>_____ conn = DriverManager.getConnection(url, user, pass);
+    // Código 19
+    { id:"q19", type:"code",
+      title:"Completa: ¿Qué interfaz falta al inicio y qué método falta para confirmar la transacción?",
+      code:`_____ conn = DriverManager.getConnection(url, user, pass);
 conn.setAutoCommit(false);
 
 try {
@@ -288,31 +278,16 @@ try {
     conn._____();
 } catch (SQLException e) {
     conn.rollback();
-}</code></pre>
+}`,
+      must:["connection","commit"],
+      show:"Connection, commit()",
+      memo:"JDBC: tipo de conexión = Connection. Confirmar transacción = commit(). Si error = rollback()."
+    },
 
-    <label for="q19_input">Tu respuesta (puedes escribir “Connection, commit” o el código completo):</label>
-    <input id="q19_input" type="text" placeholder="Ej: Connection, commit  |  o: Connection conn = ...; conn.commit();" />
-
-    <div class="row">
-      <button class="btn-primary" onclick="validate('q19')">Validar respuesta</button>
-      <span class="hint">Se acepta si incluye <b>Connection</b> y <b>commit()</b>.</span>
-    </div>
-    <div id="q19_status" class="status hidden"></div>
-
-    <div class="memo"><b>Para memorizar:</b> En JDBC: conexión = <b>Connection</b>. Para confirmar transacción → <b>commit()</b>. Si falla → <b>rollback()</b>.</div>
-  </section>
-
-  <!-- Q20 -->
-  <section class="card" data-qid="q20">
-    <div class="qhead">
-      <div>
-        <div class="badge">Pregunta 20 · JDBC Resultados</div>
-        <div class="qtitle">Completa: interfaz del resultado de un SELECT</div>
-        <p class="prompt">El resultado de <code>executeQuery()</code> se guarda en una interfaz concreta.</p>
-      </div>
-    </div>
-
-    <pre><code>Connection conn = DriverManager.getConnection(url);
+    // Código 20
+    { id:"q20", type:"code",
+      title:"Completa: ¿Qué interfaz falta y por qué es crucial cerrar los recursos JDBC?",
+      code:`Connection conn = DriverManager.getConnection(url);
 PreparedStatement stmt = conn.prepareStatement(
     "SELECT * FROM productos WHERE precio > ?"
 );
@@ -321,31 +296,57 @@ _____ rs = stmt.executeQuery();
 
 while (rs.next()) {
     System.out.println(rs.getString("nombre"));
-}</code></pre>
+}`,
+      must:["resultset"],
+      show:"ResultSet",
+      memo:"SELECT devuelve ResultSet. Cerrar recursos evita fugas y bloqueos (close / try-with-resources)."
+    },
 
-    <label for="q20_input">Tu respuesta (interfaz o fragmento):</label>
-    <input id="q20_input" type="text" placeholder="Ej: ResultSet  |  o: ResultSet rs = stmt.executeQuery();" />
+    { id:"q21", type:"mcq",
+      title:"¿Qué significa ORM en el contexto de acceso a datos?",
+      options:["Object Request Mapping","Online Resource Management","Object-Relational Mapping (Mapeo Objeto-Relacional)","Optimized Relational Model"],
+      answerIndex:2
+    },
+    { id:"q22", type:"mcq",
+      title:"¿Cuál es el archivo de configuración principal de Hibernate?",
+      options:["hibernate.properties","hibernate.cfg.xml","hibernate-config.xml","hibernate.xml"],
+      answerIndex:1
+    },
+    { id:"q23", type:"mcq",
+      title:"¿Cómo se denomina el proceso de definir la correspondencia entre clases Java y tablas de base de datos?",
+      options:["Configuration","Mapping","Binding","Persistence"],
+      answerIndex:1
+    },
+    { id:"q24", type:"mcq",
+      title:"¿Cuál es la interfaz principal para interactuar con Hibernate?",
+      options:["Session","Transaction","Configuration","SessionFactory"],
+      answerIndex:0
+    },
+    { id:"q25", type:"mcq",
+      title:"¿En qué estado se encuentra un objeto recién creado que no ha sido guardado en la base de datos?",
+      options:["Persistent","Detached","Transient","Managed"],
+      answerIndex:2
+    },
+    { id:"q26", type:"mcq",
+      title:"¿Qué método de Session se utiliza para persistir un objeto nuevo?",
+      options:["persist()","save()","update()","merge()"],
+      answerIndex:1
+    },
+    { id:"q27", type:"mcq",
+      title:"¿Cuál es el lenguaje de consultas propio de Hibernate?",
+      options:["SQL","JPQL","HQL (Hibernate Query Language)","Criteria"],
+      answerIndex:2
+    },
+    { id:"q28", type:"mcq",
+      title:"¿Qué interfaz se utiliza para manejar transacciones en Hibernate?",
+      options:["Session","Connection","Transaction","Query"],
+      answerIndex:2
+    },
 
-    <div class="row">
-      <button class="btn-primary" onclick="validate('q20')">Validar respuesta</button>
-      <span class="hint">Se acepta: “ResultSet” o un fragmento que lo contenga.</span>
-    </div>
-    <div id="q20_status" class="status hidden"></div>
-
-    <div class="memo"><b>Para memorizar:</b> SELECT en JDBC → devuelve <b>ResultSet</b>. Siempre cerrar recursos (close / try-with-resources).</div>
-  </section>
-
-  <!-- Q29 -->
-  <section class="card" data-qid="q29">
-    <div class="qhead">
-      <div>
-        <div class="badge">Pregunta 29 · Hibernate Entidad</div>
-        <div class="qtitle">Completa: anotación para marcar una clase como entidad</div>
-        <p class="prompt">Falta la anotación al inicio para que Hibernate/JPA trate la clase como persistente.</p>
-      </div>
-    </div>
-
-    <pre><code>@_____
+    // Código 29
+    { id:"q29", type:"code",
+      title:"Completa: ¿Qué anotación falta al inicio de la clase para marcarla como entidad persistente?",
+      code:`@_____
 @Table(name = "usuarios")
 public class Usuario {
 
@@ -357,31 +358,16 @@ public class Usuario {
     private String nombre;
 
     // getters y setters...
-}</code></pre>
+}`,
+      must:["@entity"],
+      show:"@Entity",
+      memo:"Para que Hibernate/JPA la persista: @Entity arriba de la clase."
+    },
 
-    <label for="q29_input">Tu respuesta (anotación o fragmento):</label>
-    <input id="q29_input" type="text" placeholder="Ej: @Entity" />
-
-    <div class="row">
-      <button class="btn-primary" onclick="validate('q29')">Validar respuesta</button>
-      <span class="hint">Se acepta: “@Entity” (con o sin espacios alrededor).</span>
-    </div>
-    <div id="q29_status" class="status hidden"></div>
-
-    <div class="memo"><b>Para memorizar:</b> Clase persistente en Hibernate/JPA → <b>@Entity</b>.</div>
-  </section>
-
-  <!-- Q30 -->
-  <section class="card" data-qid="q30">
-    <div class="qhead">
-      <div>
-        <div class="badge">Pregunta 30 · Hibernate Sesión</div>
-        <div class="qtitle">Completa: método para guardar y método para cerrar sesión</div>
-        <p class="prompt">Faltan dos métodos: uno para persistir y otro para cerrar en <code>finally</code>.</p>
-      </div>
-    </div>
-
-    <pre><code>SessionFactory factory = new Configuration()
+    // Código 30
+    { id:"q30", type:"code",
+      title:"Completa: ¿Qué métodos faltan y por qué es fundamental cerrar la sesión en el bloque finally?",
+      code:`SessionFactory factory = new Configuration()
         .configure()
         .buildSessionFactory();
 
@@ -397,112 +383,146 @@ try {
     tx.rollback();
 } finally {
     session._____();
-}</code></pre>
+}`,
+      must:["save","close"],
+      show:"save() y close()",
+      memo:"Guardar: session.save(obj). Siempre cerrar: session.close() en finally."
+    },
+  ];
 
-    <label for="q30_input">Tu respuesta (puedes escribir “save, close” o el fragmento completo):</label>
-    <input id="q30_input" type="text" placeholder="Ej: save, close  |  o: session.save(usuario); ... finally { session.close(); }" />
-
-    <div class="row">
-      <button class="btn-primary" onclick="validate('q30')">Validar respuesta</button>
-      <span class="hint">Se acepta si incluye <b>save</b> y <b>close</b> (con o sin paréntesis).</span>
-    </div>
-    <div id="q30_status" class="status hidden"></div>
-
-    <div class="memo"><b>Para memorizar:</b> Guardar en Hibernate → <b>session.save(obj)</b>. Siempre cerrar → <b>session.close()</b> en finally.</div>
-  </section>
-
-  <!-- Final actions -->
-  <div class="footer-actions">
-    <div class="scorebox">
-      Progreso:
-      <span class="pill" id="progressPill">0 validadas</span>
-      <span class="pill" id="scorePill">0 correctas</span>
-    </div>
-    <div class="row">
-      <button class="btn-warn" onclick="finalizeTest()">Finalizar</button>
-      <button onclick="resetTest()">Reiniciar</button>
-    </div>
-  </div>
-
-  <div id="finalStatus" class="card hidden"></div>
-
-</div>
-
-<script>
-  // Respuestas correctas (se validan por "contiene", para permitir código completo)
-  const ANSWERS = {
-    q9:  { must: ["filewriter"], show: 'FileWriter' },
-    q10: { must: ["readline"], show: 'readLine()' },
-    q19: { must: ["connection", "commit"], show: 'Connection + commit()' },
-    q20: { must: ["resultset"], show: 'ResultSet' },
-    q29: { must: ["@entity"], show: '@Entity' },
-    q30: { must: ["save", "close"], show: 'save() + close()' }
-  };
-
+  // ====== ESTADO ======
   const state = {
-    validated: {}, // qid -> {correct:boolean}
-    total: Object.keys(ANSWERS).length
+    validated: {}, // id -> {correct:boolean}
+    total: QUESTIONS.length
   };
 
+  // ====== HELPERS ======
   function norm(s){
     return (s || "")
       .toString()
       .trim()
       .toLowerCase()
       .replace(/\s+/g,"")
-      .replace(/;+/g,";"); // mínimo
+      .replace(/;+/g,";");
   }
-
   function containsAll(input, mustArr){
     return mustArr.every(token => input.includes(token));
   }
-
-  function setStatus(qid, ok, msg, correctText){
-    const el = document.getElementById(qid + "_status");
-    el.classList.remove("hidden","ok","bad");
-    el.classList.add(ok ? "ok" : "bad");
-    el.innerHTML = ok
-      ? `✅ <b>Correcto</b>. ${msg || ""}`
-      : `❌ <b>Incorrecto</b>. ${msg || ""}<span class="small">✅ Correcta: <b>${correctText}</b></span>`;
+  function escapeHtml(s){
+    return s.replace(/[&<>"']/g, m => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[m]));
   }
-
-  function validate(qid){
-    const inputEl = document.getElementById(qid + "_input");
-    const raw = inputEl.value;
-    const n = norm(raw);
-
-    const rule = ANSWERS[qid];
-    const ok = containsAll(n, rule.must);
-
-    // Guardar estado validado (si revalida, se actualiza)
-    state.validated[qid] = { correct: ok };
-
-    setStatus(
-      qid,
-      ok,
-      ok ? "Bien." : "Revisa los huecos/palabras clave.",
-      rule.show
-    );
-
-    updateProgress();
-  }
-
   function updateProgress(){
     const validatedCount = Object.keys(state.validated).length;
     const correctCount = Object.values(state.validated).filter(x => x.correct).length;
-
     document.getElementById("progressPill").textContent = `${validatedCount} validadas`;
     document.getElementById("scorePill").textContent = `${correctCount} correctas`;
   }
+  function setStatus(id, ok, correctText){
+    const el = document.getElementById(id + "_status");
+    el.classList.remove("hidden","ok","bad");
+    el.classList.add(ok ? "ok" : "bad");
+    el.innerHTML = ok
+      ? `✅ <b>Correcto</b>.`
+      : `❌ <b>Incorrecto</b>.<span class="small">✅ Correcta: <b>${escapeHtml(correctText)}</b></span>`;
+  }
 
+  // ====== RENDER ======
+  function render(){
+    const app = document.getElementById("app");
+    app.innerHTML = QUESTIONS.map((q, idx) => {
+      const n = idx + 1;
+
+      if(q.type === "mcq"){
+        const opts = q.options.map((opt, oi) => `
+          <div class="opt">
+            <input type="radio" name="${q.id}_radio" id="${q.id}_opt_${oi}" value="${oi}">
+            <div>
+              <div><b>${String.fromCharCode(65+oi)})</b> ${escapeHtml(opt)}</div>
+            </div>
+          </div>
+        `).join("");
+
+        return `
+          <section class="card" data-qid="${q.id}">
+            <div class="qhead">
+              <div>
+                <div class="badge">Pregunta ${n} · Tipo test</div>
+                <div class="qtitle">${escapeHtml(q.title)}</div>
+              </div>
+            </div>
+
+            <div class="options">${opts}</div>
+
+            <div class="row">
+              <button class="btn-primary" onclick="validateMCQ('${q.id}', ${q.answerIndex})">Validar respuesta</button>
+            </div>
+            <div id="${q.id}_status" class="status hidden"></div>
+          </section>
+        `;
+      }
+
+      // code question
+      return `
+        <section class="card" data-qid="${q.id}">
+          <div class="qhead">
+            <div>
+              <div class="badge">Pregunta ${n} · Completar / Código</div>
+              <div class="qtitle">${escapeHtml(q.title)}</div>
+              <p class="prompt">Escribe el código completo o al menos lo necesario para completar los huecos.</p>
+            </div>
+          </div>
+
+          <pre><code>${escapeHtml(q.code)}</code></pre>
+
+          <label for="${q.id}_input">Tu respuesta:</label>
+          <input id="${q.id}_input" type="text" placeholder="Escribe aquí..." />
+
+          <div class="row">
+            <button class="btn-primary" onclick="validateCode('${q.id}')">Validar respuesta</button>
+            <span class="hint">Se acepta si contiene las palabras clave correctas (aunque escribas más código).</span>
+          </div>
+          <div id="${q.id}_status" class="status hidden"></div>
+
+          <div class="memo"><b>Para memorizar:</b> ${escapeHtml(q.memo || "")}</div>
+        </section>
+      `;
+    }).join("");
+  }
+
+  // ====== VALIDACIONES ======
+  function validateMCQ(id, answerIndex){
+    const radios = document.querySelectorAll(`input[name="${id}_radio"]`);
+    let chosen = null;
+    radios.forEach(r => { if(r.checked) chosen = Number(r.value); });
+
+    const ok = chosen === answerIndex;
+    state.validated[id] = { correct: ok };
+
+    const correctText = `${String.fromCharCode(65+answerIndex)}) ${QUESTIONS.find(q=>q.id===id).options[answerIndex]}`;
+    setStatus(id, ok, correctText);
+    updateProgress();
+  }
+
+  function validateCode(id){
+    const q = QUESTIONS.find(x => x.id === id);
+    const input = norm(document.getElementById(id + "_input").value);
+    const ok = containsAll(input, q.must);
+
+    state.validated[id] = { correct: ok };
+    setStatus(id, ok, q.show);
+    updateProgress();
+  }
+
+  // ====== FINAL / RESET ======
   function finalizeTest(){
     const validatedCount = Object.keys(state.validated).length;
     const correctCount = Object.values(state.validated).filter(x => x.correct).length;
-    const wrongCount = validatedCount - correctCount;
 
-    // Consideramos no respondidas como falladas para el "superado"
-    const notValidated = state.total - validatedCount;
-    const totalWrongForPass = wrongCount + notValidated;
+    // No contestadas cuentan como falladas para aprobar
+    const notAnswered = state.total - validatedCount;
+    const wrongTotal = (validatedCount - correctCount) + notAnswered;
 
     const percent = Math.round((correctCount / state.total) * 100);
     const passed = percent >= 60;
@@ -515,35 +535,34 @@ try {
           <div class="badge">Resultado final</div>
           <div class="qtitle">${passed ? "✅ Superaste el test" : "❌ No superaste el test"}</div>
           <p class="prompt">
-            Total preguntas: <b>${state.total}</b> · Correctas: <b>${correctCount}</b> · Incorrectas: <b>${totalWrongForPass}</b>
-            · Porcentaje: <b>${percent}%</b>
+            Total: <b>${state.total}</b> · Correctas: <b>${correctCount}</b> · Incorrectas: <b>${wrongTotal}</b> · Porcentaje: <b>${percent}%</b>
           </p>
           <div class="status ${passed ? "ok" : "bad"}" style="margin-top:10px;">
             ${passed
-              ? "Vas bien. Mantén estas 6 respuestas de código muy claras."
-              : "Te falta repasar. Enfócate en: FileWriter, readLine, Connection/commit, ResultSet, @Entity, save/close."
+              ? "Buen trabajo. Repite el test hasta sacar 90–100%."
+              : "Repasa las que fallaste. Valida cada pregunta para ver la correcta."
             }
-            <span class="small">
-              Nota: Las no validadas cuentan como falladas para calcular si superas.
-            </span>
+            <span class="small">Nota: las no validadas cuentan como falladas para aprobar.</span>
           </div>
         </div>
       </div>
     `;
-
-    // Scroll al resultado
     box.scrollIntoView({behavior:"smooth", block:"start"});
   }
 
   function resetTest(){
-    // limpiar inputs
-    for(const qid of Object.keys(ANSWERS)){
-      const inputEl = document.getElementById(qid + "_input");
-      inputEl.value = "";
-      const statusEl = document.getElementById(qid + "_status");
-      statusEl.className = "status hidden";
-      statusEl.innerHTML = "";
-    }
+    // borrar radios + inputs + estados
+    QUESTIONS.forEach(q => {
+      const st = document.getElementById(q.id + "_status");
+      if(st){ st.className = "status hidden"; st.innerHTML=""; }
+      if(q.type === "mcq"){
+        document.querySelectorAll(`input[name="${q.id}_radio"]`).forEach(r => r.checked = false);
+      } else {
+        const inp = document.getElementById(q.id + "_input");
+        if(inp) inp.value = "";
+      }
+    });
+
     state.validated = {};
     updateProgress();
 
@@ -551,9 +570,13 @@ try {
     box.classList.add("hidden");
     box.innerHTML = "";
 
-    // subir arriba
     window.scrollTo({top:0, behavior:"smooth"});
   }
+
+  // init
+  render();
+  updateProgress();
 </script>
 </body>
 </html>
+
